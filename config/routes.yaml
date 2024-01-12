@@ -21,3 +21,7 @@ controllers:
         _locale: '%app_locales%'
     defaults:
         _locale: '%locale%'
+
+auth:
+    path: /auth
+    methods: ['POST']

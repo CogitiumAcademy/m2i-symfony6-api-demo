@@ -13,8 +13,10 @@ namespace App\Entity;
 
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
+use ApiPlatform\Metadata\ApiResource;
 use function Symfony\Component\String\u;
+use Symfony\Component\Serializer\Attribute\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Defines the properties of the Comment entity to represent the blog comments.
@@ -28,6 +30,8 @@ use function Symfony\Component\String\u;
  */
 #[ORM\Entity]
 #[ORM\Table(name: 'symfony_demo_comment')]
+#[ApiResource]
+#[\ApiPlatform\Metadata\Post(securityPostDenormalize: "is_granted('comment_new', object)")]
 class Comment
 {
     #[ORM\Id]
@@ -42,13 +46,16 @@ class Comment
     #[ORM\Column(type: Types::TEXT)]
     #[Assert\NotBlank(message: 'comment.blank')]
     #[Assert\Length(min: 5, minMessage: 'comment.too_short', max: 10000, maxMessage: 'comment.too_long')]
+    #[Groups(['read:post:item'])]
     private ?string $content = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[Groups(['read:post:item'])]
     private \DateTime $publishedAt;
 
     #[ORM\ManyToOne(targetEntity: User::class)]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['read:post:item'])]
     private ?User $author = null;
 
     public function __construct()

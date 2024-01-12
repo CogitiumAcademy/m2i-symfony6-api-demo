@@ -11,12 +11,14 @@
 
 namespace App\Entity;
 
-use App\Repository\UserRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
+use App\Repository\UserRepository;
+use ApiPlatform\Metadata\ApiResource;
+use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 /**
  * Defines the properties of the User entity to represent the application users.
@@ -30,6 +32,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: 'symfony_demo_user')]
+#[ApiResource]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     // We can use constants for roles to find usages all over the application rather
@@ -45,6 +48,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(type: Types::STRING)]
     #[Assert\NotBlank]
+    #[Groups(['read:post:collection','read:post:item'])]
     private ?string $fullName = null;
 
     #[ORM\Column(type: Types::STRING, unique: true)]
