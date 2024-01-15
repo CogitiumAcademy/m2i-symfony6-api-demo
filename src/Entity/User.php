@@ -80,6 +80,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @var string[]
      */
     #[ORM\Column(type: Types::JSON)]
+    #[Groups(['read:user:collection'])]
     private array $roles = [];
 
     public function getId(): ?int

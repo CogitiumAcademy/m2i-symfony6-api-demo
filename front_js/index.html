@@ -119,12 +119,14 @@
                         let posts = data["hydra:member"]
                         console.log("Posts =" , posts)
 
+                        /*
                         let last = data["hydra:view"]["hydra:last"]
                         console.log("Last =", last)
                         let a_last = createNode('a')
                         a_last.innerHTML = 'Dernière page'
                         a_last.href = api + last
                         append(root, a_last)
+                        */
 
 
                         let nb = data["hydra:totalItems"]
@@ -158,7 +160,7 @@
                             append(root, p)
 
                             let tags = post["tags"]
-                            console.log("Tags =" , tags)
+                            //console.log("Tags =" , tags)
 
                             tags.map(function(tag) {
                                 let buttontag = createNode('button');
@@ -172,7 +174,7 @@
                         })
                             
                         let titles = document.getElementsByClassName('titre')
-                        console.log("Titres = ", titles)
+                        //console.log("Titres = ", titles)
                         for(let title of titles) {
                             console.log(title)
                             title.addEventListener("click", function (event) {
