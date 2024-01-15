@@ -25,7 +25,7 @@ use Symfony\Component\Serializer\Attribute\Groups;
  */
 #[ORM\Entity]
 #[ORM\Table(name: 'symfony_demo_tag')]
-#[ApiResource]
+//#[ApiResource]
 class Tag implements \JsonSerializable
 {
     #[ORM\Id]

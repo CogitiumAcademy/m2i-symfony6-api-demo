@@ -12,9 +12,12 @@
 namespace App\Entity;
 
 use Doctrine\DBAL\Types\Types;
+use ApiPlatform\Metadata\Patch;
+use App\Controller\MeController;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\UserRepository;
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GetCollection;
 use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -33,6 +36,14 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: 'symfony_demo_user')]
 #[ApiResource]
+#[GetCollection(
+    uriTemplate: "/me",
+    controller: MeController::class,
+    security: "is_granted('user_read', object)",
+    name: 'me',
+    normalizationContext: ['groups' => ['read:user:collection']]
+)]
+#[Patch(security: "is_granted('user_edit', object)")]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     // We can use constants for roles to find usages all over the application rather
@@ -48,16 +59,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(type: Types::STRING)]
     #[Assert\NotBlank]
-    #[Groups(['read:post:collection','read:post:item'])]
+    #[Groups(['read:post:collection','read:post:item','read:user:collection'])]
     private ?string $fullName = null;
 
     #[ORM\Column(type: Types::STRING, unique: true)]
     #[Assert\NotBlank]
     #[Assert\Length(min: 2, max: 50)]
+    #[Groups(['read:user:collection'])]
     private ?string $username = null;
 
     #[ORM\Column(type: Types::STRING, unique: true)]
     #[Assert\Email]
+    #[Groups(['read:user:collection'])]
     private ?string $email = null;
 
     #[ORM\Column(type: Types::STRING)]
